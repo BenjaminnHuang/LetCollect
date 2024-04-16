@@ -1,12 +1,11 @@
 const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
-const app = express();
 const userRouter = require("./controllers/user");
 
-app.use(cors({ origin: true }));
-app.use(express.json());
-
-app.use("/", userRouter);
-
-exports.user = functions.https.onRequest(app);
+// Create the Express app for the 'user' function
+const userApp = express();
+userApp.use(cors({ origin: true }));
+userApp.use(express.json());
+userApp.use("/", userRouter);
+exports.user = functions.https.onRequest(userApp);
