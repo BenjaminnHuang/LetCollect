@@ -1,72 +1,71 @@
 const express = require("express");
 const router = express.Router();
 const admin = require("../firebase.js");
-
 const db = admin.firestore();
 
-// get all users
+// get all posts
 router.get("/", async (req, res) => {
   try {
-    const snapshot = await db.collection("users").get();
+    const snapshot = await db.collection("posts").get();
 
-    const users = [];
+    const posts = [];
     snapshot.forEach((doc) => {
       const id = doc.id;
       const data = doc.data();
-      users.push({ id, ...data });
+      posts.push({ id, ...data });
     });
 
-    res.status(200).send(JSON.stringify(users));
+    res.status(200).send(JSON.stringify(posts));
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-// add an user
+// add a post
 router.post("/", async (req, res) => {
-  const user = req.body;
+  const post = req.body;
   try {
-    await db.collection("users").add(user);
+    await db.collection("posts").add(post);
     res.status(201).send();
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-// get an user
+// get a post
 router.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const user = await db.collection("users").doc(id).get();
-    if (user.exists) {
-      const userData = user.data();
-      const userId = user.id;
-      res.status(200).send(JSON.stringify({ id: userId, ...userData }));
+    const post = await db.collection("posts").doc(id).get();
+    if (post.exists) {
+      const postData = post.data();
+      const postId = post.id;
+      res.status(200).send(JSON.stringify({ id: postId, ...postData }));
     } else {
-      res.status(404).send("User not found");
+      res.status(404).send("Post not found");
     }
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-// update an user
+// update a post
 router.put("/:id", async (req, res) => {
   const id = req.params.id;
-  const user = req.body;
+  const post = req.body;
   try {
-    await db.collection("users").doc(id).update(user);
+    await db.collection("posts").doc(id).update(post);
     res.status(200).send();
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
-// delete an user
+// delete a post
 router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    await db.collection("users").doc(id).delete();
+    await db.collection("posts").doc(id).delete();
     res.status(200).send();
   } catch (error) {
     res.status(500).send(error);
