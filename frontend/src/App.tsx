@@ -1,11 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { Post, fetchPosts } from "./api/post";
+import { useFetchPostsQuery } from "./redux/api/postsApi";
 
 function App() {
-  const { data, isLoading, error } = useQuery<Post[]>({
-    queryKey: ["posts"],
-    queryFn: fetchPosts,
-  });
+  const { data, error, isLoading } = useFetchPostsQuery();
 
   return (
     <>
